@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auftragsmanager Pro - Verbessert</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+```
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .container {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+        min-height: 600px;
+        padding: 30px;
+        transition: all 0.3s ease;
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .header h1 {
+        color: #333;
+        font-size: 1.8em;
+        margin-bottom: 10px;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .header .subtitle {
+        color: #666;
+        font-size: 0.9em;
+    }
+
+    .screen {
+        display: none;
+        animation: fadeIn 0.3s ease;
+    }
+
+    .screen.active {
+        display: block;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+        font-size: 0.9em;
+    }
+
+    input, select, textarea {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        font-size: 1em;
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    input:focus, select:focus, textarea:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .btn {
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: 12px;
+        font-size: 1em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-primary {
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-secondary {
+        background: #f8f9fa;
+        color: #333;
+        border: 2px solid #e0e0e0;
+    }
+
+    .btn-secondary:hover {
+        background: #e9ecef;
+        transform: translateY(-1px);
+    }
+
+    .btn-success {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        color: white;
+    }
+
+    .btn-success:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(40, 167, 69, 0.3);
+    }
+
+    .btn-danger {
+        background: linear-gradient(45deg, #dc3545, #fd7e14);
+        color: white;
+    }
+
+    .btn-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(220, 53, 69, 0.3);
+    }
+
+    .alert {
+        padding: 12px 16px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        font-weight: 500;
+        animation: slideIn 0.3s ease;
+    }
+
+    .alert-error {
+        background: #fff2f2;
+        color: #d63384;
+        border: 1px solid #f8d7da;
+    }
+
+    .alert-success {
+        background: #f0fff4;
+        color: #198754;
+        border: 1px solid #d1e7dd;
+    }
+
+    .alert-info {
+        background: #f0f8ff;
+        color: #0dcaf0;
+        border: 1px solid #b8daff;
+    }
+
+    @keyframes slideIn {
+        from { transform: translateX(-100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+
+    .role-selector {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .role-card {
+        padding: 20px;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    .role-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .role-card.selected {
+        border-color: #667eea;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+    }
+
+    .role-card .icon {
+        font-size: 2em;
+        margin-bottom: 10px;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .stat-card {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-card .number {
+        font-size: 2em;
+        font-weight: bold;
+        color: #667eea;
+        margin-bottom: 5px;
+    }
+
+    .stat-card .label {
+        color: #666;
+        font-size: 0.9em;
+    }
+
+    .order-card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 15px;
+        border-left: 4px solid #667eea;
+        transition: all 0.3s ease;
+    }
+
+    .order-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .order-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .order-id {
+        font-weight: bold;
+        color: #667eea;
+    }
+
+    .order-status {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8em;
+        font-weight: 600;
+    }
+
+    .status-pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .status-assigned {
+        background: #cff4fc;
+        color: #055160;
+    }
+
+    .status-completed {
+        background: #d1e7dd;
+        color: #0f5132;
+    }
+
+    .floating-actions {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .fab {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: none;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        font-size: 1.5em;
+        cursor: pointer;
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .fab:hover {
+        transform: scale(1.1);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    .search-bar {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    .search-bar input {
+        padding-left: 45px;
+    }
+
+    .search-bar::before {
+        content: "🔍";
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1;
+    }
+
+    .breadcrumb {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        color: #666;
+        font-size: 0.9em;
+    }
+
+    .breadcrumb a {
+        color: #667eea;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .breadcrumb a:hover {
+        text-decoration: underline;
+    }
+
+    .breadcrumb::after {
+        content: " / ";
+        margin: 0 10px;
+    }
+
+    .breadcrumb:last-child::after {
+        content: "";
+    }
+
+    .address-input-container {
+        position: relative;
+    }
+
+    .address-suggestions {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-top: none;
+        border-radius: 0 0 12px 12px;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 1000;
+        display: none;
+    }
+
+    .address-suggestion {
+        padding: 12px 16px;
+        cursor: pointer;
+        border-bottom: 1px solid #f0f0f0;
+        transition: background-color 0.2s ease;
+    }
+
+    .address-suggestion:hover {
+        background-color: #f8f9fa;
+    }
+
+    .address-suggestion:last-child {
+        border-bottom: none;
+    }
+
+    .address-suggestion .main-text {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 2px;
+    }
+
+    .address-suggestion .secondary-text {
+        font-size: 0.9em;
+        color: #666;
+    }
+
+    .address-verified {
+        border-color: #28a745 !important;
+        background: rgba(40, 167, 69, 0.05);
+    }
+
+    .address-verified::after {
+        content: "✓";
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #28a745;
+        font-weight: bold;
+    }
+
+    .maps-link {
+        display: inline-block;
+        margin-top: 10px;
+        color: #667eea;
+        text-decoration: none;
+        font-size: 0.9em;
+    }
+
+    .maps-link:hover {
+        text-decoration: underline;
+    }
+        .container {
+            padding: 20px;
+            margin: 10px;
+        }
+        
+        .role-selector {
+            grid-template-columns: 1fr;
+        }
+        
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Auftragsmanager Pro</h1>
+            <p class="subtitle">Professionelles Auftragsmanagement</p>
+        </div>
+
+```
+    <!-- Login Screen -->
+    <div class="screen active" id="login">
+        <div class="form-group">
+            <label>🔐 Rolle wählen:</label>
+            <div class="role-selector">
+                <div class="role-card" data-role="admin">
+                    <div class="icon">👑</div>
+                    <div>Admin</div>
+                </div>
+                <div class="role-card" data-role="agent">
+                    <div class="icon">📞</div>
+                    <div>Agent</div>
+                </div>
+                <div class="role-card" data-role="monteur">
+                    <div class="icon">🔧</div>
+                    <div>Monteur</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label>Passwort:</label>
+            <input type="password" id="password" placeholder="Passwort eingeben">
+        </div>
+        
+        <button class="btn btn-primary" onclick="login()">Einloggen</button>
+        
+        <div id="login-error" class="alert alert-error" style="display: none;">
+            ❌ Falsches Passwort oder keine Rolle gewählt
+        </div>
+    </div>
+
+    <!-- Dashboard Screen -->
+    <div class="screen" id="dashboard">
+        <div class="breadcrumb">
+            <span>Dashboard</span>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="number" id="totalOrders">0</div>
+                <div class="label">Gesamt Aufträge</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="completedOrders">0</div>
+                <div class="label">Abgeschlossen</div>
+            </div>
+        </div>
+        
+        <div id="dashboard-content"></div>
+        
+        <button class="btn btn-secondary" onclick="logout()">Ausloggen</button>
+    </div>
+
+    <!-- New Order Screen -->
+    <div class="screen" id="newOrder">
+        <div class="breadcrumb">
+            <a onclick="showScreen('dashboard')">Dashboard</a>
+            <span>Neuer Auftrag</span>
+        </div>
+        
+        <div class="form-group">
+            <label>🌍 Land:</label>
+            <select id="country">
+                <option value="">Land wählen</option>
+                <option value="at">🇦🇹 Österreich</option>
+                <option value="ch">🇨🇭 Schweiz</option>
+                <option value="de">🇩🇪 Deutschland</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>🔧 Branche:</label>
+            <select id="industry">
+                <option value="">Branche wählen</option>
+                <option value="rohrreinigung">🚰 Rohrreinigung</option>
+                <option value="schluesseldienst">🔑 Schlüsseldienst</option>
+                <option value="schaedlingsbekaempfung">🐛 Schädlingsbekämpfung</option>
+                <option value="sanitaer">🔧 Sanitär</option>
+                <option value="elektrik">⚡ Elektrik</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>📍 Adresse:</label>
+            <div class="address-input-container">
+                <input type="text" id="address" placeholder="Adresse eingeben - Google Maps Vorschläge werden angezeigt">
+                <div id="addressSuggestions" class="address-suggestions"></div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label>📞 Kundenkontakt:</label>
+            <input type="tel" id="customerPhone" placeholder="Telefonnummer">
+        </div>
+        
+        <div class="form-group">
+            <label>📅 Termin (optional):</label>
+            <input type="datetime-local" id="appointment">
+        </div>
+        
+        <div class="form-group">
+            <label>📝 Beschreibung:</label>
+            <textarea id="description" placeholder="Auftragsbeschreibung"></textarea>
+        </div>
+        
+        <button class="btn btn-success" onclick="createOrder()">📨 Auftrag erstellen</button>
+        <button class="btn btn-secondary" onclick="showScreen('dashboard')">← Zurück</button>
+    </div>
+
+    <!-- Assign Monteur Screen -->
+    <div class="screen" id="assignMonteur">
+        <div class="breadcrumb">
+            <a onclick="showScreen('dashboard')">Dashboard</a>
+            <span>Monteur zuweisen</span>
+        </div>
+        
+        <div class="search-bar">
+            <input type="text" id="searchOrderId" placeholder="Auftrag-ID eingeben">
+        </div>
+        
+        <div id="orderDetails" style="display: none;">
+            <div class="order-card">
+                <div class="order-header">
+                    <span class="order-id" id="foundOrderId"></span>
+                    <span class="order-status status-pending" id="foundOrderStatus">Offen</span>
+                </div>
+                <div id="foundOrderDetails"></div>
+            </div>
+            
+            <div class="form-group">
+                <label>👷 Monteur wählen:</label>
+                <select id="monteurSelect">
+                    <option value="">Monteur wählen</option>
+                    <option value="m1">Max Mustermann</option>
+                    <option value="m2">Anna Schmidt</option>
+                    <option value="m3">Peter Weber</option>
+                </select>
+            </div>
+            
+            <button class="btn btn-success" onclick="assignMonteur()">✅ Zuweisen</button>
+        </div>
+        
+        <button class="btn btn-secondary" onclick="showScreen('dashboard')">← Zurück</button>
+    </div>
+
+    <!-- Report Revenue Screen -->
+    <div class="screen" id="reportRevenue">
+        <div class="breadcrumb">
+            <a onclick="showScreen('dashboard')">Dashboard</a>
+            <span>Umsatz melden</span>
+        </div>
+        
+        <div class="search-bar">
+            <input type="text" id="searchRevenueOrderId" placeholder="Auftrag-ID eingeben">
+        </div>
+        
+        <div id="revenueOrderDetails" style="display: none;">
+            <div class="order-card">
+                <div class="order-header">
+                    <span class="order-id" id="revenueOrderId"></span>
+                    <span class="order-status status-assigned" id="revenueOrderStatus">Zugewiesen</span>
+                </div>
+                <div id="revenueOrderInfo"></div>
+            </div>
+            
+            <div class="form-group">
+                <label>💰 Betrag:</label>
+                <input type="number" id="amount" placeholder="Betrag in €" min="0" step="0.01">
+            </div>
+            
+            <div class="form-group">
+                <label>💳 Zahlungsart:</label>
+                <select id="paymentMethod">
+                    <option value="">Zahlungsart wählen</option>
+                    <option value="bar">💵 Bar</option>
+                    <option value="ueberweisung">🏦 Überweisung</option>
+                    <option value="ec">💳 EC-Karte</option>
+                    <option value="twint">📱 Twint</option>
+                </select>
+            </div>
+            
+            <button class="btn btn-success" onclick="reportRevenue()">✅ Umsatz melden</button>
+            <button class="btn btn-danger" onclick="cancelOrder()">❌ Auftrag stornieren</button>
+        </div>
+        
+        <button class="btn btn-secondary" onclick="showScreen('dashboard')">← Zurück</button>
+    </div>
+</div>
+
+<script>
+    let currentUser = null;
+    let orders = [];
+    let orderIdCounter = 1000;
+    let selectedAddress = null;
+    let addressTimeout = null;
+
+    // Google Maps-like address suggestions (mock data for demo)
+    const addressSuggestions = {
+        'österreich': [
+            { main: 'Stephansplatz 1', secondary: '1010 Wien, Österreich', coords: { lat: 48.2082, lng: 16.3738 } },
+            { main: 'Salzburger Straße 15', secondary: '1200 Wien, Österreich', coords: { lat: 48.2308, lng: 16.3564 } },
+            { main: 'Mariahilfer Straße 112', secondary: '1070 Wien, Österreich', coords: { lat: 48.1975, lng: 16.3476 } }
+        ],
+        'schweiz': [
+            { main: 'Bahnhofstrasse 1', secondary: '8001 Zürich, Schweiz', coords: { lat: 47.3769, lng: 8.5417 } },
+            { main: 'Freiestrasse 25', secondary: '4001 Basel, Schweiz', coords: { lat: 47.5596, lng: 7.5886 } },
+            { main: 'Rue du Rhône 45', secondary: '1204 Genf, Schweiz', coords: { lat: 46.2044, lng: 6.1432 } }
+        ],
+        'deutschland': [
+            { main: 'Alexanderplatz 1', secondary: '10178 Berlin, Deutschland', coords: { lat: 52.5200, lng: 13.4050 } },
+            { main: 'Marienplatz 1', secondary: '80331 München, Deutschland', coords: { lat: 48.1351, lng: 11.5820 } },
+            { main: 'Hauptstraße 142', secondary: '69117 Heidelberg, Deutschland', coords: { lat: 49.4093, lng: 8.6937 } }
+        ]
+    };
+
+    function searchAddresses(query) {
+        const country = document.getElementById('country').value;
+        if (!country || !query || query.length < 2) {
+            return [];
+        }
+        
+        const countryMap = {
+            'at': 'österreich',
+            'ch': 'schweiz', 
+            'de': 'deutschland'
+        };
+        
+        const suggestions = addressSuggestions[countryMap[country]] || [];
+        
+        return suggestions.filter(addr => 
+            addr.main.toLowerCase().includes(query.toLowerCase()) ||
+            addr.secondary.toLowerCase().includes(query.toLowerCase())
+        );
+    }
+
+    function showAddressSuggestions(suggestions) {
+        const suggestionsContainer = document.getElementById('addressSuggestions');
+        
+        if (suggestions.length === 0) {
+            suggestionsContainer.style.display = 'none';
+            return;
+        }
+        
+        suggestionsContainer.innerHTML = suggestions.map(addr => `
+            <div class="address-suggestion" onclick="selectAddress('${addr.main}', '${addr.secondary}', ${addr.coords.lat}, ${addr.coords.lng})">
+                <div class="main-text">${addr.main}</div>
+                <div class="secondary-text">${addr.secondary}</div>
+            </div>
+        `).join('');
+        
+        suggestionsContainer.style.display = 'block';
+    }
+
+    function selectAddress(main, secondary, lat, lng) {
+        const addressInput = document.getElementById('address');
+        const fullAddress = `${main}, ${secondary}`;
+        
+        addressInput.value = fullAddress;
+        addressInput.classList.add('address-verified');
+        
+        selectedAddress = {
+            address: fullAddress,
+            coordinates: { lat, lng }
+        };
+        
+        document.getElementById('addressSuggestions').style.display = 'none';
+        
+        // Add Google Maps link
+        const container = addressInput.parentElement;
+        let mapsLink = container.querySelector('.maps-link');
+        if (!mapsLink) {
+            mapsLink = document.createElement('a');
+            mapsLink.className = 'maps-link';
+            mapsLink.target = '_blank';
+            container.appendChild(mapsLink);
+        }
+        mapsLink.href = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+        mapsLink.textContent = '📍 In Google Maps öffnen';
+    }
+
+    function validateAddress() {
+        const addressInput = document.getElementById('address');
+        const currentValue = addressInput.value;
+        
+        if (!selectedAddress || selectedAddress.address !== currentValue) {
+            addressInput.classList.remove('address-verified');
+            selectedAddress = null;
+            
+            const container = addressInput.parentElement;
+            const mapsLink = container.querySelector('.maps-link');
+            if (mapsLink) {
+                mapsLink.remove();
+            }
+        }
+    }
+
+    // Initialize with some sample data
+    orders = [
+        {
+            id: 1001,
+            country: 'at',
+            industry: 'rohrreinigung',
+            address: 'Hauptstraße 1, 1010 Wien',
+            customerPhone: '+43 1 234567',
+            status: 'pending',
+            description: 'Verstopfung in der Küche',
+            createdAt: new Date(),
+            monteur: null,
+            amount: null,
+            paymentMethod: null
+        },
+        {
+            id: 1002,
+            country: 'ch',
+            industry: 'schluesseldienst',
+            address: 'Bahnhofstrasse 5, 8001 Zürich',
+            customerPhone: '+41 44 123456',
+            status: 'assigned',
+            description: 'Türöffnung nach Schlüsselverlust',
+            createdAt: new Date(),
+            monteur: 'Max Mustermann',
+            amount: null,
+            paymentMethod: null
+        }
+    ];
+
+    function login() {
+        const selectedRole = document.querySelector('.role-card.selected');
+        const password = document.getElementById('password').value;
+        
+        if (!selectedRole || !password) {
+            document.getElementById('login-error').style.display = 'block';
+            return;
+        }
+        
+        // Simple password check (in real app, use proper authentication)
+        if (password === 'admin123') {
+            currentUser = {
+                role: selectedRole.dataset.role,
+                name: 'User'
+            };
+            document.getElementById('login-error').style.display = 'none';
+            showScreen('dashboard');
+            updateDashboard();
+        } else {
+            document.getElementById('login-error').style.display = 'block';
+        }
+    }
+
+    function logout() {
+        currentUser = null;
+        showScreen('login');
+        document.getElementById('password').value = '';
+        document.querySelectorAll('.role-card').forEach(card => {
+            card.classList.remove('selected');
+        });
+    }
+
+    function showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(screen => {
+            screen.classList.remove('active');
+        });
+        document.getElementById(screenId).classList.add('active');
+    }
+
+    function updateDashboard() {
+        document.getElementById('totalOrders').textContent = orders.length;
+        document.getElementById('completedOrders').textContent = orders.filter(o => o.status === 'completed').length;
+        
+        const dashboardContent = document.getElementById('dashboard-content');
+        
+        if (currentUser.role === 'admin') {
+            dashboardContent.innerHTML = `
+                <button class="btn btn-primary" onclick="showScreen('newOrder')">🆕 Neuer Auftrag</button>
+                <button class="btn btn-primary" onclick="showScreen('assignMonteur')">👷 Monteur zuweisen</button>
+                <button class="btn btn-primary" onclick="showScreen('reportRevenue')">💰 Umsatz melden</button>
+            `;
+        } else if (currentUser.role === 'agent') {
+            dashboardContent.innerHTML = `
+                <button class="btn btn-primary" onclick="showScreen('newOrder')">🆕 Neuer Auftrag</button>
+            `;
+        } else if (currentUser.role === 'monteur') {
+            dashboardContent.innerHTML = `
+                <button class="btn btn-primary" onclick="showScreen('reportRevenue')">💰 Umsatz melden</button>
+                <div class="alert alert-info">Ihre zugewiesenen Aufträge werden hier angezeigt</div>
+            `;
+        }
+    }
+
+    function createOrder() {
+        const country = document.getElementById('country').value;
+        const industry = document.getElementById('industry').value;
+        const address = document.getElementById('address').value;
+        const customerPhone = document.getElementById('customerPhone').value;
+        const appointment = document.getElementById('appointment').value;
+        const description = document.getElementById('description').value;
+        
+        if (!country || !industry || !address || !customerPhone) {
+            alert('Bitte füllen Sie alle Pflichtfelder aus.');
+            return;
+        }
+        
+        // Recommend address verification
+        if (!selectedAddress) {
+            const confirmCreate = confirm('Die Adresse wurde nicht über Google Maps verifiziert. Möchten Sie trotzdem fortfahren?');
+            if (!confirmCreate) return;
+        }
+        
+        const newOrder = {
+            id: ++orderIdCounter,
+            country,
+            industry,
+            address,
+            customerPhone,
+            appointment,
+            description,
+            status: 'pending',
+            createdAt: new Date(),
+            monteur: null,
+            amount: null,
+            paymentMethod: null,
+            coordinates: selectedAddress ? selectedAddress.coordinates : null
+        };
+        
+        orders.push(newOrder);
+        
+        // Clear form
+        document.getElementById('country').value = '';
+        document.getElementById('industry').value = '';
+        document.getElementById('address').value = '';
+        document.getElementById('address').classList.remove('address-verified');
+        document.getElementById('customerPhone').value = '';
+        document.getElementById('appointment').value = '';
+        document.getElementById('description').value = '';
+        selectedAddress = null;
+        
+        // Remove maps link
+        const mapsLink = document.querySelector('.maps-link');
+        if (mapsLink) mapsLink.remove();
+        
+        alert('Auftrag erfolgreich erstellt!');
+        showScreen('dashboard');
+        updateDashboard();
+    }
+
+    function assignMonteur() {
+        const orderId = document.getElementById('searchOrderId').value;
+        const monteurId = document.getElementById('monteurSelect').value;
+        
+        if (!monteurId) {
+            alert('Bitte wählen Sie einen Monteur aus.');
+            return;
+        }
+        
+        const order = orders.find(o => o.id == orderId);
+        if (order) {
+            order.status = 'assigned';
+            order.monteur = document.getElementById('monteurSelect').selectedOptions[0].text;
+            alert('Monteur erfolgreich zugewiesen!');
+            showScreen('dashboard');
+            updateDashboard();
+        }
+    }
+
+    function reportRevenue() {
+        const orderId = document.getElementById('searchRevenueOrderId').value;
+        const amount = document.getElementById('amount').value;
+        const paymentMethod = document.getElementById('paymentMethod').value;
+        
+        if (!amount || !paymentMethod) {
+            alert('Bitte geben Sie Betrag und Zahlungsart an.');
+            return;
+        }
+        
+        const order = orders.find(o => o.id == orderId);
+        if (order) {
+            order.status = 'completed';
+            order.amount = parseFloat(amount);
+            order.paymentMethod = paymentMethod;
+            alert('Umsatz erfolgreich gemeldet!');
+            showScreen('dashboard');
+            updateDashboard();
+        }
+    }
+
+    function cancelOrder() {
+        const orderId = document.getElementById('searchRevenueOrderId').value;
+        const order = orders.find(o => o.id == orderId);
+        
+        if (order && confirm('Auftrag wirklich stornieren?')) {
+            order.status = 'cancelled';
+            alert('Auftrag wurde storniert.');
+            showScreen('dashboard');
+            updateDashboard();
+        }
+    }
+
+    // Event listeners
+    document.querySelectorAll('.role-card').forEach(card => {
+        card.addEventListener('click', function() {
+            document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+            this.classList.add('selected');
+        });
+    });
+
+    // Address autocomplete functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const addressInput = document.getElementById('address');
+        if (addressInput) {
+            addressInput.addEventListener('input', function() {
+                clearTimeout(addressTimeout);
+                validateAddress();
+                
+                addressTimeout = setTimeout(() => {
+                    const suggestions = searchAddresses(this.value);
+                    showAddressSuggestions(suggestions);
+                }, 300);
+            });
+            
+            addressInput.addEventListener('blur', function() {
+                // Hide suggestions after a short delay to allow clicking
+                setTimeout(() => {
+                    document.getElementById('addressSuggestions').style.display = 'none';
+                }, 150);
+            });
+            
+            addressInput.addEventListener('focus', function() {
+                if (this.value.length >= 2) {
+                    const suggestions = searchAddresses(this.value);
+                    showAddressSuggestions(suggestions);
+                }
+            });
+        }
+    });
+
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.address-input-container')) {
+            document.getElementById('addressSuggestions').style.display = 'none';
+        }
+    });
+
+    document.getElementById('searchOrderId').addEventListener('input', function() {
+        const orderId = this.value;
+        const order = orders.find(o => o.id == orderId);
+        
+        if (order) {
+            document.getElementById('foundOrderId').textContent = `Auftrag #${order.id}`;
+            document.getElementById('foundOrderDetails').innerHTML = `
+                <strong>Branche:</strong> ${order.industry}<br>
+                <strong>Adresse:</strong> ${order.address}<br>
+                <strong>Telefon:</strong> ${order.customerPhone}
+                ${order.coordinates ? `<br><a href="https://www.google.com/maps/search/?api=1&query=${order.coordinates.lat},${order.coordinates.lng}" target="_blank" class="maps-link">📍 In Google Maps öffnen</a>` : ''}
+            `;
+            document.getElementById('orderDetails').style.display = 'block';
+        } else {
+            document.getElementById('orderDetails').style.display = 'none';
+        }
+    });
+
+    document.getElementById('searchRevenueOrderId').addEventListener('input', function() {
+        const orderId = this.value;
+        const order = orders.find(o => o.id == orderId);
+        
+        if (order && order.status === 'assigned') {
+            document.getElementById('revenueOrderId').textContent = `Auftrag #${order.id}`;
+            document.getElementById('revenueOrderInfo').innerHTML = `
+                <strong>Monteur:</strong> ${order.monteur}<br>
+                <strong>Branche:</strong> ${order.industry}<br>
+                <strong>Adresse:</strong> ${order.address}
+                ${order.coordinates ? `<br><a href="https://www.google.com/maps/search/?api=1&query=${order.coordinates.lat},${order.coordinates.lng}" target="_blank" class="maps-link">📍 In Google Maps öffnen</a>` : ''}
+            `;
+            document.getElementById('revenueOrderDetails').style.display = 'block';
+        } else {
+            document.getElementById('revenueOrderDetails').style.display = 'none';
+        }
+    });
+
+    // Initialize
+    updateDashboard();
+</script>
+```
+
+</body>
+</html>
